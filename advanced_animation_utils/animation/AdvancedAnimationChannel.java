@@ -1,11 +1,3 @@
-
-import com.mojang.math.Vector3f;
-
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 @OnlyIn(Dist.CLIENT)
 public record AdvancedAnimationChannel(AdvancedAnimationChannel.Target target, AdvancedKeyframe[] keyframes) {
    @OnlyIn(Dist.CLIENT)
