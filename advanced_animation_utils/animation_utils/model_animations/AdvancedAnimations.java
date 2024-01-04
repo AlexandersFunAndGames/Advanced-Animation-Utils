@@ -3,6 +3,7 @@ public class AdvancedAnimations {
 	private static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();
 
 	private static final String ANIM_TIME_OVERRIDE = "anim_time_override";
+	private static final String LAST_ANIM_TIME_OVERRIDE = "last_anim_time_override";
 	
 	public static float getTick(float originalTick) {
 		return (((originalTick + Minecraft.getInstance().getFrameTime())) * (Mth.PI / 180)) / 20;
@@ -14,35 +15,39 @@ public class AdvancedAnimations {
 		// The amount of time that the entity has existed for
 		modifiers.put("life_time", AdvancedAnimations.getTick(entity.tickCount));
 		
-		// The amount of time that the animation has been playing for, so it will be removed and replaced with a usable anim_time modifier if it exists in animate
+		// The amount of time that the animation has been playing for, will be removed and replaced with a usable anim_time modifier if it exists in animate
 		modifiers.put(ANIM_TIME_OVERRIDE, 0F);
-		
+				
 		return modifiers;
 	}
 	
 	public static void animate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, Map<String, Float> modifiers) {
-		animate(model, animationState, animationDefinition, tick, 1.0F, modifiers);
+		modifiedSpeedAnimate(model, animationState, animationDefinition, tick, 1.0F, modifiers);
 	}
 
-	public static void animateWalk(HierarchicalModel<?> model, AdvancedAnimationDefinition animationDefinition, float limbSwing, float tick, float elapsedTimeMultiplier, float speedMultiplier, Map<String, Float> modifiers) {
-		long i = (long) (limbSwing * 50.0F * elapsedTimeMultiplier);
-		float f = Math.min(tick * speedMultiplier, 1.0F);
-		animate(model, animationDefinition, 1 + i, false, f, modifiers, ANIMATION_VECTOR_CACHE);
-	}
-
-	public static void animate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float speedMultiplier, Map<String, Float> modifiers) {
+	public static void modifiedSpeedAnimate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float speedMultiplier, Map<String, Float> modifiers) {
 		animationState.updateTime(tick, speedMultiplier);
 		animationState.ifStarted((state) -> {
-			animate(model, animationDefinition, state.getAccumulatedTime(), false, 1.0F, modifiers, ANIMATION_VECTOR_CACHE);
+			animate(model, animationDefinition, state.getAccumulatedTime(), 1.0F, 1.0F, modifiers, ANIMATION_VECTOR_CACHE);
 		});
 	}
-
-	public static void animateStatic(HierarchicalModel<?> model, Entity entity, AdvancedAnimationDefinition animationDefinition, Map<String, Float> modifiers) {
-		animate(model, animationDefinition, entity != null ? (double)(entity.tickCount / 20.0D) : 1L, true, 1.0F, modifiers, ANIMATION_VECTOR_CACHE);
-	}
 	   
-   public static void animate(HierarchicalModel<?> model, AdvancedAnimationDefinition definition, double accumulatedTime, boolean ignoreElapsedSecondConverter, float speedMultiplier, Map<String, Float> modifiers, Vector3f cache) {
-      float f = (float)(ignoreElapsedSecondConverter ? accumulatedTime : getElapsedSeconds(definition, accumulatedTime));
+	public static void modifiedAmountAnimate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float amountMultiplier, Map<String, Float> modifiers) {
+		animationState.updateTime(tick, 1.0F);
+		animationState.ifStarted((state) -> {
+			animate(model, animationDefinition, state.getAccumulatedTime(), 1.0F, amountMultiplier, modifiers, ANIMATION_VECTOR_CACHE);
+		});
+	}
+	
+	public static void modifiedAnimate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float speedMultiplier, float amountMultiplier, Map<String, Float> modifiers) {
+		animationState.updateTime(tick, speedMultiplier);
+		animationState.ifStarted((state) -> {
+			animate(model, animationDefinition, state.getAccumulatedTime(), 1.0F, amountMultiplier, modifiers, ANIMATION_VECTOR_CACHE);
+		});
+	}
+	
+   public static void animate(HierarchicalModel<?> model, AdvancedAnimationDefinition definition, double accumulatedTime, float speedMultiplier, float amountMultiplier, Map<String, Float> modifiers, Vector3f cache) {
+      float f = getElapsedSeconds(definition, accumulatedTime);
       
       if (modifiers.containsKey(ANIM_TIME_OVERRIDE)) {
     	  modifiers.remove(ANIM_TIME_OVERRIDE);
@@ -64,6 +69,7 @@ public class AdvancedAnimations {
                float f1 = f - keyframe.timestamp();
                float f2 = Mth.clamp(f1 / (keyframe1.timestamp() - keyframe.timestamp()), 0.0F, 1.0F);
                keyframe1.interpolation().apply(cache, f2, getVectorsForAdvancedKeyframes(akeyframe, channel.target(), modifiers), i, j, speedMultiplier);
+               cache.mul(amountMultiplier);
                channel.target().apply(modelPart, cache);
             });
          });
