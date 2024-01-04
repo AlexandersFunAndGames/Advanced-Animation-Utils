@@ -1,12 +1,12 @@
 @OnlyIn(Dist.CLIENT)
-public class CustomArmourLayer<T extends LivingEntity, M extends EntityModel<T> & ArmourWearingModel, A extends HumanoidModel<T>> extends RenderLayer<T, M> {
+public class AdvancedArmourLayer<T extends LivingEntity, M extends EntityModel<T> & AdvancedArmourWearingModel, A extends HumanoidModel<T>> extends RenderLayer<T, M> {
    private static final Map<String, ResourceLocation> ARMOR_LOCATION_CACHE = Maps.newHashMap();
    private final A model;
    private final ArmourModelPart modelPart;
    private final EquipmentSlot slot;
    private final boolean innerModel;
 
-   public CustomArmourLayer(RenderLayerParent<T, M> renderer, A model, ArmourModelPart modelPart, boolean innerModel, EquipmentSlot slot) {
+   public AdvancedArmourLayer(RenderLayerParent<T, M> renderer, A model, ArmourModelPart modelPart, boolean innerModel, EquipmentSlot slot) {
       super(renderer);
       this.model = model;
       this.modelPart = modelPart;
@@ -136,14 +136,14 @@ public class CustomArmourLayer<T extends LivingEntity, M extends EntityModel<T> 
    
    @SuppressWarnings({ "rawtypes", "unchecked" })
    public static void addCustomArmourLayers(LivingEntityRenderer renderer, EntityRendererProvider.Context context, ModelLayerLocation innerArmourModelLayerLocation, ModelLayerLocation outerArmourModelLayerLocation) {
-	   renderer.addLayer(new CustomArmourLayer(renderer, new HumanoidModel(context.bakeLayer(innerArmourModelLayerLocation)), ArmourModelPart.BODY, true, EquipmentSlot.LEGS));
-	   renderer.addLayer(new CustomArmourLayer(renderer, new HumanoidModel(context.bakeLayer(innerArmourModelLayerLocation)), ArmourModelPart.RIGHT_LEG, true, EquipmentSlot.LEGS));
-	   renderer.addLayer(new CustomArmourLayer(renderer, new HumanoidModel(context.bakeLayer(innerArmourModelLayerLocation)), ArmourModelPart.LEFT_LEG, true, EquipmentSlot.LEGS));
-	   renderer.addLayer(new CustomArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.HEAD, false, EquipmentSlot.HEAD));
-	   renderer.addLayer(new CustomArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.BODY, false, EquipmentSlot.CHEST));
-	   renderer.addLayer(new CustomArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.RIGHT_ARM, false, EquipmentSlot.CHEST));
-	   renderer.addLayer(new CustomArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.LEFT_ARM, false, EquipmentSlot.CHEST));
-	   renderer.addLayer(new CustomArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.RIGHT_LEG, false, EquipmentSlot.FEET));
-	   renderer.addLayer(new CustomArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.LEFT_LEG, false, EquipmentSlot.FEET));
+	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(innerArmourModelLayerLocation)), ArmourModelPart.BODY, true, EquipmentSlot.LEGS));
+	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(innerArmourModelLayerLocation)), ArmourModelPart.RIGHT_LEG, true, EquipmentSlot.LEGS));
+	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(innerArmourModelLayerLocation)), ArmourModelPart.LEFT_LEG, true, EquipmentSlot.LEGS));
+	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.HEAD, false, EquipmentSlot.HEAD));
+	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.BODY, false, EquipmentSlot.CHEST));
+	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.RIGHT_ARM, false, EquipmentSlot.CHEST));
+	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.LEFT_ARM, false, EquipmentSlot.CHEST));
+	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.RIGHT_LEG, false, EquipmentSlot.FEET));
+	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.LEFT_LEG, false, EquipmentSlot.FEET));
    }
 }

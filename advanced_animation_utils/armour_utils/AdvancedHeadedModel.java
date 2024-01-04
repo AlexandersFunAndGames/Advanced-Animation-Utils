@@ -1,3 +1,3 @@
-public interface CustomHeadedModel {
+public interface AdvancedHeadedModel {
 	void translateToHead(PoseStack stack);
 }
