@@ -12,7 +12,7 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	public String name;	
 	
 	public boolean isProgressAt(float progress) {		
-		return Mth.abs(progress - (animationLength - animationTime)) <= 0.05F;
+		return Mth.abs(progress - (animationLength - animationTime)) <= 0.049F;
 	}
 	
 	public void start(float animationLength, float transitionSpeed) {
