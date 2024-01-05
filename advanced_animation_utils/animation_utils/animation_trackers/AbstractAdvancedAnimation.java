@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import advanced_animation_utils.animation_utils.model_animations.AdvancedAnimations;
+import advanced_animation_utils.animation_utils.model_animations.AdvancedAnimator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
@@ -32,29 +32,26 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 		return animationLength - animationTime;
 	}
 	
-	public void start(float animationLength, float transitionSpeed) {
+	public void start(float animationLength, int transitionSpeed) {
 		this.animationLength = animationLength;
 		this.animationTime = animationLength;
-		this.transitionSpeed = transitionSpeed;
+		this.transitionSpeed = (float)transitionSpeed / 20.0F;
+		syncToClient();
+	}
+		
+	public void startLooping(int transitionSpeed) {
+		looping = true;
+		this.transitionSpeed = (float)transitionSpeed / 20.0F;
 		syncToClient();
 	}
 	
-	public void stop() {
+	public void stop(int transitionSpeed) {
 		this.animationLength = 0;
 		this.animationTime = 0;
-		syncToClient();
-	}
-	
-	public void startLooping(float transitionSpeed) {
-		looping = true;
-		this.transitionSpeed = transitionSpeed;
-		syncToClient();
-	}
-	
-	public void stopLooping() {
+		this.transitionSpeed = (float)transitionSpeed / 20.0F;
 		looping = false;
 		syncToClient();
-	}	
+	}
 	
 	@Override
 	public void tick() {
@@ -78,8 +75,8 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	
 	@Override
 	public void updateModifiers() {
-		modifiers.put("life_time", AdvancedAnimations.getTick(tickCount));
-		modifiers.put("anim_time", AdvancedAnimations.getTick(progress() * 20));
+		modifiers.put("life_time", AdvancedAnimator.getTick(tickCount));
+		modifiers.put("anim_time", AdvancedAnimator.getTick(progress() * 20));
 	}
 	
 	@Override

@@ -14,6 +14,12 @@ public class AdvancedAnimationTracker {
 		return animations.get(name);
 	}
 	
+	public void tick() {
+		animations.forEach((name, animation) -> {
+			animation.tick();
+		});
+	}
+	
 	public void addAnimation(String name, AdvancedAnimation newAnimation) {
 		newAnimation.setName(name);
 		newAnimation.setTracker(this);

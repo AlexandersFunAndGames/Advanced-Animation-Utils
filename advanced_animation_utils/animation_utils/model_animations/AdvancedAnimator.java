@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.mojang.math.Vector3f;
 
-import advanced_animation_utils.animation_utils.animation_trackers.entity.EntityAdvancedAnimation;
+import advanced_animation_utils.animation_utils.animation_trackers.AbstractAdvancedAnimation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -16,14 +16,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class AdvancedAnimations {
+public class AdvancedAnimator {
 	private static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();
 	
 	public static float getTick(float originalTick) {
 		return (((originalTick + Minecraft.getInstance().getFrameTime())) * (Mth.PI / 180)) / 20;
 	}
 	
-	public static void animateEntity(HierarchicalModel<?> model, EntityAdvancedAnimation animation, AdvancedAnimationDefinition animationDefinition, float tick) {
+	public static void animate(HierarchicalModel<?> model, AbstractAdvancedAnimation animation, AdvancedAnimationDefinition animationDefinition, float tick) {
 		animation.updateModifiers();
 		modifiedAmountAnimate(model, animation.state, animationDefinition, tick, animation.lerpAmount(), animation.modifiers);
 	}
