@@ -1,3 +1,10 @@
+package advanced_animation_utils.animation_utils.animation_trackers;
+
+import java.util.Map;
+import java.util.UUID;
+
+import com.google.common.collect.Maps;
+
 public class AdvancedAnimationTracker {
 
 	public Map<String, AdvancedAnimation> animations = Maps.newHashMap();

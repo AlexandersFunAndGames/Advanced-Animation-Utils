@@ -1,24 +1,31 @@
+package advanced_animation_utils.animation_utils.model_animations;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import com.mojang.math.Vector3f;
+
+import advanced_animation_utils.animation_utils.animation_trackers.entity.EntityAdvancedAnimation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HierarchicalModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 @OnlyIn(Dist.CLIENT)
 public class AdvancedAnimations {
 	private static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();
-
-	private static final String ANIM_TIME_OVERRIDE = "anim_time_override";
-	private static final String LAST_ANIM_TIME_OVERRIDE = "last_anim_time_override";
 	
 	public static float getTick(float originalTick) {
 		return (((originalTick + Minecraft.getInstance().getFrameTime())) * (Mth.PI / 180)) / 20;
 	}
 	
-	public static Map<String, Float> createDefaultModifiers(Entity entity) {
-		Map<String, Float> modifiers = new HashMap<String, Float>();
-		
-		// The amount of time that the entity has existed for
-		modifiers.put("life_time", AdvancedAnimations.getTick(entity.tickCount));
-		
-		// The amount of time that the animation has been playing for, will be removed and replaced with a usable anim_time modifier if it exists in animate
-		modifiers.put(ANIM_TIME_OVERRIDE, 0F);
-				
-		return modifiers;
+	public static void animateEntity(HierarchicalModel<?> model, EntityAdvancedAnimation animation, AdvancedAnimationDefinition animationDefinition, float tick) {
+		animation.updateModifiers();
+		modifiedAmountAnimate(model, animation.state, animationDefinition, tick, animation.lerpAmount(), animation.modifiers);
 	}
 	
 	public static void animate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, Map<String, Float> modifiers) {
@@ -48,11 +55,6 @@ public class AdvancedAnimations {
 	
    public static void animate(HierarchicalModel<?> model, AdvancedAnimationDefinition definition, double accumulatedTime, float speedMultiplier, float amountMultiplier, Map<String, Float> modifiers, Vector3f cache) {
       float f = getElapsedSeconds(definition, accumulatedTime);
-      
-      if (modifiers.containsKey(ANIM_TIME_OVERRIDE)) {
-    	  modifiers.remove(ANIM_TIME_OVERRIDE);
-    	  modifiers.put("anim_time", getTick(f * 20.0F));
-      }
       
       for(Map.Entry<String, List<AdvancedAnimationChannel>> entry : definition.boneAnimations().entrySet()) {
          Optional<ModelPart> optional = model.getAnyDescendantWithName(entry.getKey());

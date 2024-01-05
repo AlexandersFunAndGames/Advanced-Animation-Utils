@@ -1,3 +1,9 @@
+package advanced_animation_utils.animation_utils.animation_trackers;
+
+import java.util.Map;
+
+import net.minecraft.network.FriendlyByteBuf;
+
 public interface AdvancedAnimation {
 
 	public abstract AdvancedAnimationTracker getTracker();
@@ -15,4 +21,8 @@ public interface AdvancedAnimation {
 	public abstract void read(FriendlyByteBuf buf);
 	
 	public abstract void syncToClient();
+	
+	public abstract Map<String, Float> getModifiers();
+	
+	public abstract void updateModifiers();
 }

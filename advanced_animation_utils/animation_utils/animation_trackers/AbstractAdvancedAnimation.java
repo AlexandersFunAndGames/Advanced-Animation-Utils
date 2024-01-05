@@ -1,3 +1,15 @@
+package advanced_animation_utils.animation_utils.animation_trackers;
+
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
+import advanced_animation_utils.animation_utils.model_animations.AdvancedAnimations;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AnimationState;
+
 public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 
 	public AnimationState state = new AnimationState();
@@ -10,9 +22,14 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	public int tickCount = 0;
 	public AdvancedAnimationTracker tracker;
 	public String name;	
+	public Map<String, Float> modifiers = Maps.newHashMap();
 	
 	public boolean isProgressAt(float progress) {		
-		return Mth.abs(progress - (animationLength - animationTime)) <= 0.049F;
+		return Mth.abs(progress - progress()) <= 0.049F;
+	}
+	
+	public float progress() {
+		return animationLength - animationTime;
 	}
 	
 	public void start(float animationLength, float transitionSpeed) {
@@ -56,7 +73,18 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 		} else {
 			animationTime = 0;
 			state.stop();	
-		}		
+		}	
+	}
+	
+	@Override
+	public void updateModifiers() {
+		modifiers.put("life_time", AdvancedAnimations.getTick(tickCount));
+		modifiers.put("anim_time", AdvancedAnimations.getTick(progress() * 20));
+	}
+	
+	@Override
+	public Map<String, Float> getModifiers() {
+		return modifiers;
 	}
 	
 	public float lerpAmount() {

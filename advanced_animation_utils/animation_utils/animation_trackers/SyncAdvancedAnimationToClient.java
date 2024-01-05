@@ -1,3 +1,14 @@
+package advanced_animation_utils.animation_utils.animation_trackers;
+
+import java.util.function.Supplier;
+
+import advanced_animation_utils.animation_utils.animation_trackers.entity.AdvancedAnimatableEntity;
+import advanced_animation_utils.animation_utils.animation_trackers.entity.EntityAdvancedAnimation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.NetworkEvent;
+
 public class SyncAdvancedAnimationToClient {
 
 		private final TargetType targetType;
