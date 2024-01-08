@@ -176,5 +176,6 @@ public class AdvancedArmourLayer<T extends LivingEntity, M extends EntityModel<T
 	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.LEFT_ARM, false, EquipmentSlot.CHEST));
 	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.RIGHT_LEG, false, EquipmentSlot.FEET));
 	   renderer.addLayer(new AdvancedArmourLayer(renderer, new HumanoidModel(context.bakeLayer(outerArmourModelLayerLocation)), ArmourModelPart.LEFT_LEG, false, EquipmentSlot.FEET));
+	   renderer.addLayer(new AdvancedHeadItemLayer<>(renderer, context.getModelSet(), context.getItemInHandRenderer()));
    }
 }

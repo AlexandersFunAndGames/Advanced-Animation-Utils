@@ -25,4 +25,10 @@ public class AdvancedAnimationTracker {
 		newAnimation.setTracker(this);
 		animations.put(name, newAnimation);
 	}
+	
+	public void addModifierToAllAnimations(String name, float modifier) {
+		animations.forEach((animationName, animation) -> {
+			animation.getModifiers().put(name, modifier);
+		});
+	}
 }

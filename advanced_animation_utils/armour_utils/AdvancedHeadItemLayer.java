@@ -6,6 +6,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
+import advanced_animation_utils.armour_utils.AdvancedArmourLayer.ArmourModelPart;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -33,7 +34,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class AdvancedHeadItemLayer<T extends LivingEntity, M extends EntityModel<T> & AdvancedHeadedModel> extends RenderLayer<T, M> {
+public class AdvancedHeadItemLayer<T extends LivingEntity, M extends EntityModel<T> & AdvancedArmourWearingModel> extends RenderLayer<T, M> {
    private final float scaleX;
    private final float scaleY;
    private final float scaleZ;
@@ -68,7 +69,7 @@ public class AdvancedHeadItemLayer<T extends LivingEntity, M extends EntityModel
             p_116731_.translate(0.0D, 1.0D, 0.0D);
          }
 
-         this.getParentModel().translateToHead(p_116731_);
+         this.getParentModel().translateArmour(ArmourModelPart.HEAD, p_116731_, false);;
          if (item instanceof BlockItem && ((BlockItem)item).getBlock() instanceof AbstractSkullBlock) {
             float f2 = 1.1875F;
             p_116731_.scale(1.1875F, -1.1875F, -1.1875F);
