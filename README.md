@@ -1,9 +1,14 @@
-# Alexander's Advanced Animation Utils
+<h1 align="center">
+Alexander's Advanced Animation Utils
+</h1>
 
-Alexander's Advanced Animation Utils is a set of utilities that can be added to Minecraft: Java Edition mods to help with animation.
-<br>
-<br>The project was created for modders who want to move from GeckoLib to the vanilla 1.19+ animation system, but can still be very useful for people already using the vanilla animation system.
-<br>
-<br>The current features of Alexander's Advanced Animation Utils are using Molang with vanilla models, being able give keyframe animations (with Molang, if you want) to items (not committed yet), and making non-humanoid mobs able to wear armour.
-<br>
-<br>Information on how to install and use Alexander's Advanced Animation Utils is available in the Wiki tab (well, not yet, but it will be!)
+<p align="center">
+Alexander's Advanced Animation Utils is a set of utilities for Minecraft: Java Edition modders, its main purpose is to help modders who use GeckoLib easily transition to using the vanilla animation system, but it can also be very useful for modders who already use the vanilla animation system and want some utilities to improve their animations, and simplify the management of an entity's animations
+</p>
+
+
+<h1> </h1>
+
+<p align="center">
+Go to the wiki tab to find out more!
+</p>
