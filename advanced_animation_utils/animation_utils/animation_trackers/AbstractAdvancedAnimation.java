@@ -14,6 +14,7 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 
 	public AnimationState state = new AnimationState();
 	public float animationTime;
+	public float loopTime;
 	public float animationLength;
 	public float transitionSpeed;
 	public float amount = 0;
@@ -29,7 +30,7 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	}
 	
 	public float progress() {
-		return animationLength - animationTime;
+		return looping ? loopTime : animationLength - animationTime;
 	}
 	
 	public void start(float animationLength, int transitionSpeed) {
@@ -41,6 +42,7 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 		
 	public void startLooping(int transitionSpeed) {
 		looping = true;
+		loopTime = 0;
 		this.transitionSpeed = (float)transitionSpeed / 20.0F;
 		syncToClient();
 	}
@@ -59,6 +61,7 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 		amountO = amount;
 		if (looping || animationTime > 0 || amount > 0) {
 			animationTime -= 0.05F;
+			loopTime ++;
 			state.startIfStopped(tickCount);
 			
 			if (looping || animationTime > 0) {

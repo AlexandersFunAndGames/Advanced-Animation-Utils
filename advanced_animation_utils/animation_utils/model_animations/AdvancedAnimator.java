@@ -3,11 +3,13 @@ package advanced_animation_utils.animation_utils.model_animations;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.mojang.math.Vector3f;
 
 import advanced_animation_utils.animation_utils.animation_trackers.AbstractAdvancedAnimation;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
@@ -23,41 +25,41 @@ public class AdvancedAnimator {
 		return (((originalTick + Minecraft.getInstance().getFrameTime())) * (Mth.PI / 180)) / 20;
 	}
 	
-	public static void animate(HierarchicalModel<?> model, AbstractAdvancedAnimation animation, AdvancedAnimationDefinition animationDefinition, float tick) {
+	public static void animate(List<ModelPart> parts, AbstractAdvancedAnimation animation, AdvancedAnimationDefinition animationDefinition, float tick) {
 		animation.updateModifiers();
-		modifiedAmountAnimate(model, animation.state, animationDefinition, tick, animation.lerpAmount(), animation.modifiers);
+		modifiedAmountAnimate(parts, animation.state, animationDefinition, tick, animation.lerpAmount(), animation.modifiers);
 	}
 	
-	public static void animate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, Map<String, Float> modifiers) {
-		modifiedSpeedAnimate(model, animationState, animationDefinition, tick, 1.0F, modifiers);
+	public static void animate(List<ModelPart> parts, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, Map<String, Float> modifiers) {
+		modifiedSpeedAnimate(parts, animationState, animationDefinition, tick, 1.0F, modifiers);
 	}
 
-	public static void modifiedSpeedAnimate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float speedMultiplier, Map<String, Float> modifiers) {
+	public static void modifiedSpeedAnimate(List<ModelPart> parts, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float speedMultiplier, Map<String, Float> modifiers) {
 		animationState.updateTime(tick, speedMultiplier);
 		animationState.ifStarted((state) -> {
-			animate(model, animationDefinition, state.getAccumulatedTime(), 1.0F, 1.0F, modifiers, ANIMATION_VECTOR_CACHE);
+			animate(parts, animationDefinition, state.getAccumulatedTime(), 1.0F, 1.0F, modifiers, ANIMATION_VECTOR_CACHE);
 		});
 	}
 	   
-	public static void modifiedAmountAnimate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float amountMultiplier, Map<String, Float> modifiers) {
+	public static void modifiedAmountAnimate(List<ModelPart> parts, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float amountMultiplier, Map<String, Float> modifiers) {
 		animationState.updateTime(tick, 1.0F);
 		animationState.ifStarted((state) -> {
-			animate(model, animationDefinition, state.getAccumulatedTime(), 1.0F, amountMultiplier, modifiers, ANIMATION_VECTOR_CACHE);
+			animate(parts, animationDefinition, state.getAccumulatedTime(), 1.0F, amountMultiplier, modifiers, ANIMATION_VECTOR_CACHE);
 		});
 	}
 	
-	public static void modifiedAnimate(HierarchicalModel<?> model, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float speedMultiplier, float amountMultiplier, Map<String, Float> modifiers) {
+	public static void modifiedAnimate(List<ModelPart> parts, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, float speedMultiplier, float amountMultiplier, Map<String, Float> modifiers) {
 		animationState.updateTime(tick, speedMultiplier);
 		animationState.ifStarted((state) -> {
-			animate(model, animationDefinition, state.getAccumulatedTime(), 1.0F, amountMultiplier, modifiers, ANIMATION_VECTOR_CACHE);
+			animate(parts, animationDefinition, state.getAccumulatedTime(), 1.0F, amountMultiplier, modifiers, ANIMATION_VECTOR_CACHE);
 		});
 	}
 	
-   public static void animate(HierarchicalModel<?> model, AdvancedAnimationDefinition definition, double accumulatedTime, float speedMultiplier, float amountMultiplier, Map<String, Float> modifiers, Vector3f cache) {
+   public static void animate(List<ModelPart> parts, AdvancedAnimationDefinition definition, double accumulatedTime, float speedMultiplier, float amountMultiplier, Map<String, Float> modifiers, Vector3f cache) {
       float f = getElapsedSeconds(definition, accumulatedTime);
       
       for(Map.Entry<String, List<AdvancedAnimationChannel>> entry : definition.boneAnimations().entrySet()) {
-         Optional<ModelPart> optional = model.getAnyDescendantWithName(entry.getKey());
+         Optional<ModelPart> optional = getModelPart(parts, entry.getKey());
          List<AdvancedAnimationChannel> list = entry.getValue();
          optional.ifPresent((modelPart) -> {
             list.forEach((channel) -> {
@@ -77,6 +79,14 @@ public class AdvancedAnimator {
          });
       }
 
+   }
+   
+   public static Optional<ModelPart> getModelPart(List<ModelPart> parts, String name) {
+		return parts.stream().filter((part) -> {
+			return part.hasChild(name);
+		}).findFirst().map((part) -> {
+			return part.getChild(name);
+		});
    }
 
    private static float getElapsedSeconds(AdvancedAnimationDefinition p_232317_, double p_232318_) {
