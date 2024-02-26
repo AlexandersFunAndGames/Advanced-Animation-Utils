@@ -16,7 +16,7 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	public float animationTime;
 	public float loopTime;
 	public float animationLength;
-	public float transitionSpeed;
+	public int transitionTicks;
 	public float amount = 0;
 	public float amountO = 0;
 	public boolean looping;
@@ -33,24 +33,24 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 		return looping ? loopTime : animationLength - animationTime;
 	}
 	
-	public void start(float animationLength, int transitionSpeed) {
+	public void start(float animationLength, int transitionTicks) {
 		this.animationLength = animationLength;
 		this.animationTime = animationLength;
-		this.transitionSpeed = (float)transitionSpeed / 20.0F;
+		this.transitionTicks = Math.max(transitionTicks, 1);
 		syncToClient();
 	}
 		
-	public void startLooping(int transitionSpeed) {
+	public void startLooping(int transitionTicks) {
 		looping = true;
 		loopTime = 0;
-		this.transitionSpeed = (float)transitionSpeed / 20.0F;
+		this.transitionTicks = Math.max(transitionTicks, 1);
 		syncToClient();
 	}
 	
-	public void stop(int transitionSpeed) {
+	public void stop(int transitionTicks) {
 		this.animationLength = 0;
 		this.animationTime = 0;
-		this.transitionSpeed = (float)transitionSpeed / 20.0F;
+		this.transitionTicks = Math.max(transitionTicks, 1);
 		looping = false;
 		syncToClient();
 	}
@@ -65,9 +65,9 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 			state.startIfStopped(tickCount);
 			
 			if (looping || animationTime > 0) {
-				amount = Mth.clamp(amount + transitionSpeed, 0, 1);
+				amount = Mth.clamp(amount + (1.0F / (float)transitionTicks), 0, 1);
 			} else {
-				amount = Mth.clamp(amount - transitionSpeed, 0, 1);
+				amount = Mth.clamp(amount - (1.0F / (float)transitionTicks), 0, 1);
 			}
 			
 		} else {
@@ -114,7 +114,7 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	public void write(FriendlyByteBuf buf) {
 		buf.writeFloat(animationTime);
 		buf.writeFloat(animationLength);
-		buf.writeFloat(transitionSpeed);
+		buf.writeInt(transitionTicks);
 		buf.writeFloat(amount);
 		buf.writeFloat(amountO);
 		buf.writeBoolean(looping);
@@ -123,7 +123,7 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	public void read(FriendlyByteBuf buf) {
 		animationTime = buf.readFloat();
 		animationLength = buf.readFloat();
-		transitionSpeed = buf.readFloat();
+		transitionTicks = buf.readInt();
 		amount = buf.readFloat();
 		amountO = buf.readFloat();
 		looping = buf.readBoolean();
