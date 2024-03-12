@@ -12,18 +12,18 @@ import net.minecraft.world.entity.AnimationState;
 
 public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 
-	public AnimationState state = new AnimationState();
-	public float animationTime;
-	public float loopTime;
-	public float animationLength;
-	public int transitionTicks;
-	public float amount = 0;
-	public float amountO = 0;
-	public boolean looping;
-	public int tickCount = 0;
-	public AdvancedAnimationTracker tracker;
-	public String name;	
-	public Map<String, Float> modifiers = Maps.newHashMap();
+	protected AnimationState state = new AnimationState();
+	protected float animationTime;
+	protected float loopTime;
+	protected float animationLength;
+	protected int transitionTicks;
+	protected float amount = 0;
+	protected float amountO = 0;
+	protected boolean looping;
+	protected int tickCount = 0;
+	protected AdvancedAnimationTracker tracker;
+	protected String name;	
+	protected Map<String, Float> modifiers = Maps.newHashMap();
 	
 	public boolean isProgressAt(float progress) {		
 		return Mth.abs(progress - progress()) <= 0.049F;
@@ -55,6 +55,32 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 		syncToClient();
 	}
 	
+	public boolean isPlaying() {
+		return progress() > 0;
+	}
+	
+	public boolean isLooping() {
+		return looping;
+	}
+	
+	public float getLength() {
+		return animationLength;
+	}
+	
+	public float getTransitionTicks() {
+		return transitionTicks;
+	}
+	
+	public void setLength(float value) {
+		animationLength = value; 
+		animationTime = value;
+		looping = false;
+	}
+	
+	public void setTransitionTicks(float value) {
+		transitionTicks = Math.max(transitionTicks, 1);
+	}
+	
 	@Override
 	public void tick() {
 		tickCount ++;
@@ -79,12 +105,16 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	@Override
 	public void updateModifiers() {
 		modifiers.put("life_time", AdvancedAnimator.getTick(tickCount));
-		modifiers.put("anim_time", AdvancedAnimator.getTick(progress() * 20));
+		modifiers.put("anim_time", AdvancedAnimator.getTick(progress()));
 	}
 	
 	@Override
 	public Map<String, Float> getModifiers() {
 		return modifiers;
+	}
+	
+	public AnimationState getState() {
+		return state;
 	}
 	
 	public float lerpAmount() {

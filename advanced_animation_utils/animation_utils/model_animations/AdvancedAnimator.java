@@ -27,7 +27,7 @@ public class AdvancedAnimator {
 	
 	public static void animate(List<ModelPart> parts, AbstractAdvancedAnimation animation, AdvancedAnimationDefinition animationDefinition, float tick) {
 		animation.updateModifiers();
-		modifiedAmountAnimate(parts, animation.state, animationDefinition, tick, animation.lerpAmount(), animation.modifiers);
+		modifiedAmountAnimate(parts, animation.getState(), animationDefinition, tick, animation.lerpAmount(), animation.getModifiers());
 	}
 	
 	public static void animate(List<ModelPart> parts, AnimationState animationState, AdvancedAnimationDefinition animationDefinition, float tick, Map<String, Float> modifiers) {
