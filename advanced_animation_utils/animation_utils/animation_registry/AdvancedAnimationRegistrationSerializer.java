@@ -44,7 +44,7 @@ public class AdvancedAnimationRegistrationSerializer implements JsonDeserializer
          for(int i = 0; i < bones.size(); ++i) {
             JsonObject boneObject = GsonHelper.convertToJsonObject(bones.get(i), "bone");                       
             
-            map.put(GsonHelper.getAsString(boneObject, "looping", (String)null), 
+            map.put(GsonHelper.getAsString(boneObject, "name", (String)null), 
             		getBoneAnimations(boneObject));
          }
       }
