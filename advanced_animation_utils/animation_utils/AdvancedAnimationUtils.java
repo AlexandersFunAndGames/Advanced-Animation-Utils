@@ -25,13 +25,13 @@ public class AdvancedAnimationUtils {
 		return (((originalTick + Minecraft.getInstance().getFrameTime())) * (Mth.PI / 180)) / 20;
 	}
 	
-	public static void addWalkModifiers(EntityAdvancedAnimation animation, LivingEntity entity) {
+	public static void addWalkModifiers(EntityAdvancedAnimation animation, LivingEntity entity, float groundSpeedMultiplier, float walkProgressMultiplier) {
 		double xDiff = entity.getX() - entity.xo;
 		double yDiff = 0.0D;
 		double zDiff = entity.getZ() - entity.zo;
 		float distanceTravelled = (float) Math.sqrt(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff);
-		animation.getModifiers().put("walk_progress", modifierIfPresent(animation, "walk_progress") + (distanceTravelled / 1000));
-		animation.getModifiers().put("ground_speed", distanceTravelled * 3);
+		animation.getModifiers().put("walk_progress", modifierIfPresent(animation, "walk_progress") + ((distanceTravelled / 1000) * walkProgressMultiplier));
+		animation.getModifiers().put("ground_speed", distanceTravelled * groundSpeedMultiplier);
 	}
 	
 	public static void addLegHeightOffsetModifier(LivingEntity entity, Vec3 footPos, int maxSearchRange, String animationName, String modifierName, float lerpSpeed, float minLegHeight, float maxLegHeight, float modelScale) {
