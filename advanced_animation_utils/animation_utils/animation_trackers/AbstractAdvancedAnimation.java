@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import advanced_animation_utils.animation_utils.model_animations.AdvancedAnimator;
+import advanced_animation_utils.animation_utils.AdvancedAnimationUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
@@ -34,29 +34,35 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	}
 	
 	public void start(float animationLength, int transitionTicks) {
-		this.animationLength = animationLength;
-		this.animationTime = animationLength;
-		this.transitionTicks = Math.max(transitionTicks, 1);
-		syncToClient();
+		if (!isPlaying()) {
+			this.animationLength = animationLength;
+			this.animationTime = animationLength;
+			this.transitionTicks = transitionTicks;
+			syncToClient();
+		}
 	}
 		
 	public void startLooping(int transitionTicks) {
-		looping = true;
-		loopTime = 0;
-		this.transitionTicks = Math.max(transitionTicks, 1);
-		syncToClient();
+		if (!isPlaying()) {
+			looping = true;
+			loopTime = 0;
+			this.transitionTicks = transitionTicks;
+			syncToClient();
+		}
 	}
 	
 	public void stop(int transitionTicks) {
-		this.animationLength = 0;
-		this.animationTime = 0;
-		this.transitionTicks = Math.max(transitionTicks, 1);
-		looping = false;
-		syncToClient();
+		if (isPlaying()) {
+			this.animationLength = 0;
+			this.animationTime = 0;
+			this.transitionTicks = transitionTicks;
+			looping = false;
+			syncToClient();
+		}
 	}
 	
 	public boolean isPlaying() {
-		return progress() > 0;
+		return progress() > 0 && isLooping();
 	}
 	
 	public boolean isLooping() {
@@ -91,9 +97,9 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 			state.startIfStopped(tickCount);
 			
 			if (looping || animationTime > 0) {
-				amount = Mth.clamp(amount + (1.0F / (float)transitionTicks), 0, 1);
+				amount = transitionTicks == 0 ? 1 : Mth.clamp(amount + (1.0F / (float)transitionTicks), 0, 1);
 			} else {
-				amount = Mth.clamp(amount - (1.0F / (float)transitionTicks), 0, 1);
+				amount =transitionTicks == 0 ? 0 :  Mth.clamp(amount - (1.0F / (float)transitionTicks), 0, 1);
 			}
 			
 		} else {
@@ -103,9 +109,13 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	}
 	
 	@Override
-	public void updateModifiers() {
-		modifiers.put("life_time", AdvancedAnimator.getTick(tickCount));
-		modifiers.put("anim_time", AdvancedAnimator.getTick(progress()));
+	public void clientUpdate() {
+		Minecraft minecraft = Minecraft.getInstance();
+		modifiers.put("life_time", AdvancedAnimationUtils.getTick(tickCount));
+		modifiers.put("anim_time", AdvancedAnimationUtils.getTick(progress()));
+		modifiers.put("actor_count", (float)minecraft.level.getEntityCount());
+		modifiers.put("time_of_day", ((float)minecraft.level.getDayTime() / 24000));
+		modifiers.put("moon_phase", (float)minecraft.level.getMoonPhase());
 	}
 	
 	@Override

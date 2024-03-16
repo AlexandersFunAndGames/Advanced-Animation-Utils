@@ -24,5 +24,5 @@ public interface AdvancedAnimation {
 	
 	public abstract Map<String, Float> getModifiers();
 	
-	public abstract void updateModifiers();
+	public abstract void clientUpdate();
 }

@@ -19,14 +19,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class AdvancedAnimator {
-	private static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();
-	
-	public static float getTick(float originalTick) {
-		return (((originalTick + Minecraft.getInstance().getFrameTime())) * (Mth.PI / 180)) / 20;
-	}
+	private static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();		
 	
 	public static void animate(List<ModelPart> parts, AbstractAdvancedAnimation animation, AdvancedAnimationDefinition animationDefinition, float tick) {
-		animation.updateModifiers();
+		animation.clientUpdate();
 		modifiedAmountAnimate(parts, animation.getState(), animationDefinition, tick, animation.lerpAmount(), animation.getModifiers());
 	}
 	
