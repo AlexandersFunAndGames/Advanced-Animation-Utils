@@ -36,7 +36,7 @@ public abstract class AbstractAdvancedAnimation implements AdvancedAnimation {
 	}
 	
 	public boolean isProgressAt(float progress) {		
-		return Mth.abs(progress - progress()) <= 0.049F;
+		return Mth.abs(progress - progress()) < 0.025F;
 	}
 	
 	public float progress() {
