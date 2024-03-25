@@ -9,12 +9,13 @@ public class EntityAdvancedAnimation extends AbstractAdvancedAnimation {
 
 	public Entity entity;	
 	
-	public EntityAdvancedAnimation(Entity entity) {
+	public EntityAdvancedAnimation(Entity entity, boolean holdOnLastFrame) {
+		super(holdOnLastFrame);
 		this.entity = entity;
 	}			
 	
 	public void syncToClient() {
-		if (!this.entity.level.isClientSide) {
+		if (serverSide()) {
 			AdvancedAnimationPacketHandler.sendToAllPlayers(new SyncAdvancedAnimationToClient(this, this.entity.getId()));
 		}
 	}	
@@ -33,5 +34,10 @@ public class EntityAdvancedAnimation extends AbstractAdvancedAnimation {
 			modifiers.put("max_health", livingEntity.getMaxHealth());
 			modifiers.put("is_on_fire", livingEntity.isOnFire() ? 1F : 0F);
 		}
+	}
+
+	@Override
+	public boolean serverSide() {
+		return !this.entity.level.isClientSide;
 	}
 }

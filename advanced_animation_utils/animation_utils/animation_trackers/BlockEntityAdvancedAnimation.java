@@ -9,13 +9,19 @@ public class BlockEntityAdvancedAnimation extends AbstractAdvancedAnimation {
 
 	public BlockEntity blockEntity;	
 	
-	public BlockEntityAdvancedAnimation(BlockEntity blockEntity) {
+	public BlockEntityAdvancedAnimation(BlockEntity blockEntity, boolean holdOnLastFrame) {
+		super(holdOnLastFrame);
 		this.blockEntity = blockEntity;
 	}			
 	
 	public void syncToClient() {
-		if (!this.blockEntity.getLevel().isClientSide) {
+		if (serverSide()) {
 			AdvancedAnimationPacketHandler.sendToAllPlayers(new SyncAdvancedAnimationToClient(this, this.blockEntity.getBlockPos()));
 		}
+	}
+
+	@Override
+	public boolean serverSide() {
+		return !this.blockEntity.getLevel().isClientSide;
 	}
 }
