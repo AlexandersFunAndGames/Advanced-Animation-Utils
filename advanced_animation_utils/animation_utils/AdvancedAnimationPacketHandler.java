@@ -12,7 +12,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 public class AdvancedAnimationPacketHandler {
 
 	public static SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
-			.named(new ResourceLocation(MutantMore.MOD_ID, "advanced_animation_packets")).clientAcceptedVersions("1"::equals)
+			.named(new ResourceLocation(MutantMore.MODID, "advanced_animation_packets")).clientAcceptedVersions("1"::equals)
 			.serverAcceptedVersions("1"::equals).networkProtocolVersion(() -> "1").simpleChannel();
 
 	private static int packetId = 0;

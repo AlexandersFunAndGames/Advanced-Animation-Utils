@@ -66,7 +66,7 @@ public class AdvancedAnimationUtils {
 				currentHeight = -maxSearchRange;
 			}
 		}
-		return currentHeight;
+		return (float) (currentHeight - (entity.getY() - entity.getBlockY()));
 	}
 	
 	public static float modifierIfPresent(AdvancedAnimation animation, String modifier) {
