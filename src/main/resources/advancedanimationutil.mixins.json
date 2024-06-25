@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.infamousmisadventures.advancedanimationutil.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "advancedanimationutil.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

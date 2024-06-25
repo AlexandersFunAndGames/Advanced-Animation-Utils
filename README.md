@@ -1,0 +1,2 @@
+# Advanced Animation Util (Legacy)
+This version of AAU is primarily used in some of Alexander's 1.19.2 mods, as well as Infamous Legends 1.19.2. If you'd like to work with modern AAU, you should visit [This Repository](https://github.com/Infamous-Misadventures/AdvancedAnimationUtil) instead.
